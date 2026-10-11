@@ -1,0 +1,222 @@
+import 'package:flutter/material.dart';
+
+import '../../../core/theme/app_colors.dart';
+import '../../../core/utils/formatters.dart';
+import '../../../core/widgets/placeholder_view.dart';
+import '../../../data/models/innings.dart';
+import '../../../data/models/match.dart';
+import '../widgets/details_card.dart';
+import '../widgets/stat_table.dart';
+
+class ScorecardTab extends StatefulWidget {
+  const ScorecardTab({super.key, required this.match});
+
+  final Match match;
+
+  @override
+  State<ScorecardTab> createState() => _ScorecardTabState();
+}
+
+class _ScorecardTabState extends State<ScorecardTab> {
+  /// Indexes of expanded innings. The latest innings starts open.
+  late final Set<int> _expanded = {widget.match.innings.length - 1};
+
+  void _toggle(int i) => setState(
+        () => _expanded.contains(i) ? _expanded.remove(i) : _expanded.add(i),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    final match = widget.match;
+    if (match.innings.isEmpty) {
+      return const PlaceholderView(
+        icon: Icons.table_chart_outlined,
+        title: 'No scorecard yet',
+        message: 'The scorecard will be available once the match starts.',
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        MatchStatusMessage(match: match),
+        const SizedBox(height: 12),
+        for (var i = 0; i < match.innings.length; i++) ...[
+          _InningsSection(
+            innings: match.innings[i],
+            isLive: match.status == MatchStatus.live &&
+                i == match.innings.length - 1,
+            expanded: _expanded.contains(i),
+            onToggle: () => _toggle(i),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+}
+
+class _InningsSection extends StatelessWidget {
+  const _InningsSection({
+    required this.innings,
+    required this.isLive,
+    required this.expanded,
+    required this.onToggle,
+  });
+
+  final Innings innings;
+  final bool isLive;
+  final bool expanded;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    final headerFg = expanded ? Colors.white : AppColors.textPrimary;
+
+    return DetailsCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Header: green when open, white when collapsed.
+          Material(
+            color: expanded ? AppColors.primary : AppColors.surface,
+            child: InkWell(
+              onTap: onToggle,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        innings.battingTeam.name,
+                        style: TextStyle(
+                          color: headerFg,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${innings.runs}-${innings.wickets} (${innings.oversText})',
+                      style: TextStyle(
+                        color: headerFg,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Icon(
+                      expanded ? Icons.expand_less : Icons.expand_more,
+                      color: expanded ? Colors.white : AppColors.textMuted,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (expanded) ..._buildBody(),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _buildBody() {
+    return [
+      StatTable.batting(
+        rows: [
+          for (final b in innings.batting) StatRows.batter(b, live: isLive),
+        ],
+      ),
+      const Divider(),
+      _SummaryRow(
+        label: 'Extras',
+        value: '${innings.extras.total}',
+        detail: innings.extras.breakdown,
+      ),
+      const Divider(),
+      _SummaryRow(
+        label: 'Total',
+        value: '${innings.runs}-${innings.wickets} (${innings.oversText})',
+        detail: 'CRR ${Formatters.decimal(innings.runRate)}',
+        bold: true,
+      ),
+      if (innings.yetToBat.isNotEmpty) ...[
+        const Divider(),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isLive ? 'Yet to bat' : 'Did not bat',
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                innings.yetToBat.join(', '),
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      StatTable.bowling(
+        rows: [for (final b in innings.bowling) StatRows.bowler(b)],
+      ),
+    ];
+  }
+}
+
+class _SummaryRow extends StatelessWidget {
+  const _SummaryRow({
+    required this.label,
+    required this.value,
+    required this.detail,
+    this.bold = false,
+  });
+
+  final String label;
+  final String value;
+  final String detail;
+  final bool bold;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 60,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.w800 : FontWeight.w700,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              detail,
+              textAlign: TextAlign.right,
+              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
