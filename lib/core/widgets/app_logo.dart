@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// "Cricket Live" wordmark with a ball icon.
-/// To use a real logo later, replace [_LogoMark] with Image.asset(...).
+/// Logo image + "Cricket Live" wordmark.
 class AppLogo extends StatelessWidget {
   const AppLogo({super.key, this.size = 1.0, this.stacked = true});
 
@@ -26,26 +25,27 @@ class AppLogo extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _LogoMark(size: 40 * size),
+        _LogoMark(size: 44 * size),
         SizedBox(width: 8 * size),
         stacked
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Cricket', style: titleStyle),
-                  Text('Live', style: liveStyle),
+                  Text('Wicketly', style: titleStyle),
+                  
                 ],
               )
             : Text.rich(TextSpan(children: [
-                TextSpan(text: 'Cricket ', style: titleStyle),
-                TextSpan(text: 'Live', style: liveStyle),
+                TextSpan(text: 'Wicketly ', style: titleStyle),
+                
               ])),
       ],
     );
   }
 }
 
+/// The stumps-and-ball logo image (transparent PNG).
 class _LogoMark extends StatelessWidget {
   const _LogoMark({required this.size});
 
@@ -53,18 +53,11 @@ class _LogoMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Image.asset(
+      'assets/images/app_logo.png',
       width: size,
       height: size,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primaryLight, AppColors.primaryDark],
-        ),
-      ),
-      child: Icon(Icons.sports_cricket, color: Colors.white, size: size * 0.6),
+      fit: BoxFit.contain,
     );
   }
 }
