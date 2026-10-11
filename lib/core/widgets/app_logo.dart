@@ -27,19 +27,13 @@ class AppLogo extends StatelessWidget {
       children: [
         _LogoMark(size: 44 * size),
         SizedBox(width: 8 * size),
-        stacked
-            ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Wicketly', style: titleStyle),
-                  
-                ],
-              )
-            : Text.rich(TextSpan(children: [
-                TextSpan(text: 'Wicketly ', style: titleStyle),
-                
-              ])),
+        Text.rich(
+          TextSpan(
+            children: [
+              TextSpan(text: 'Wicketly', style: titleStyle),
+            ],
+          ),
+        ),
       ],
     );
   }
