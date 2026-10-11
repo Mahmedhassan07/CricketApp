@@ -131,20 +131,20 @@ class _UpcomingBody extends StatelessWidget {
         Expanded(
           child: Column(
             children: [
-              Text(
-                Formatters.date(match.startTime),
-                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-              ),
+              // Text(
+              //   Formatters.date(match.startTime),
+              //   style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+              // ),
               const SizedBox(height: 2),
-              Text(
-                Formatters.time(match.startTime),
-                style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
-              ),
+              // Text(
+              //   Formatters.time(match.startTime),
+              //   style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+              // ),
               const SizedBox(height: 2),
-              const Text(
-                '(Local Time)',
-                style: TextStyle(fontSize: 11, color: AppColors.textMuted),
-              ),
+              // const Text(
+              //   '(Local Time)',
+              //   style: TextStyle(fontSize: 11, color: AppColors.textMuted),
+              // ),
             ],
           ),
         ),
@@ -197,7 +197,7 @@ class _VsChip extends StatelessWidget {
       child: const Text(
         'vs',
         style: TextStyle(
-          fontSize: 11,
+          fontSize: 13,
           fontWeight: FontWeight.w600,
           color: AppColors.textSecondary,
         ),
