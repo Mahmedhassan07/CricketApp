@@ -15,7 +15,7 @@ class AppColors {
   static const live = Color(0xFFE11D48);
   static const liveSoft = Color(0xFFFFE4E8);
   static const upcoming = Color(0xFF4F46E5);
-  static const upcomingSoft = Color(0xFFEDEBFF);
+  static const upcomingSoft = Color.fromARGB(255, 23, 22, 31);
   static const completed = Color(0xFF64748B);
   static const completedSoft = Color(0xFFF1F5F9);
 

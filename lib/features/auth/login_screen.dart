@@ -1,11 +1,9 @@
-import 'package:flutter/material.dart';
 
+import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/app_logo.dart';
 import '../shell/main_shell.dart';
 
-/// Fake login: any input (or none) goes straight to Home.
-/// Replace [_goHome] with real auth later.
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -14,27 +12,34 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isObscured = true;
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  bool hidePassword = true;
+
+  void login() {
+    if (emailController.text.trim().isEmpty ||
+        passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter email and password'),
+        ),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MainShell(),
+        ),
+      );
+    }
+  }
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
     super.dispose();
-  }
-
-  void _goHome() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const MainShell()),
-    );
-  }
-
-  void _showComingSoon(String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature is coming soon')),
-    );
   }
 
   @override
@@ -43,113 +48,79 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const Center(child: AppLogo(size: 1.4)),
                 const SizedBox(height: 32),
-                const _WelcomeCard(),
-                const SizedBox(height: 28),
+
                 const Text(
-                  'Email',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  'Welcome',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+
                 const SizedBox(height: 8),
+
+                const Text(
+                  'Sign in to follow live scores, fixtures and more.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+
+                const SizedBox(height: 28),
+
                 TextField(
-                  controller: _emailController,
+                  controller: emailController,
                   keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
                   decoration: const InputDecoration(
-                    hintText: 'you@example.com',
+                    labelText: 'Email',
+                    hintText: 'Enter your email',
                     prefixIcon: Icon(Icons.email_outlined),
                   ),
                 ),
+
                 const SizedBox(height: 16),
-                const Text(
-                  'Password',
-                  style: TextStyle(fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 8),
+
                 TextField(
-                  controller: _passwordController,
-                  obscureText: _isObscured,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _goHome(),
+                  controller: passwordController,
+                  obscureText: hidePassword,
                   decoration: InputDecoration(
+                    labelText: 'Password',
                     hintText: 'Enter your password',
                     prefixIcon: const Icon(Icons.lock_outline),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isObscured
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                        hidePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
-                      onPressed: () =>
-                          setState(() => _isObscured = !_isObscured),
+                      onPressed: () {
+                        setState(() {
+                          hidePassword = !hidePassword;
+                        });
+                      },
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => _showComingSoon('Password reset'),
-                    child: const Text('Forgot password?'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ElevatedButton(
-                  onPressed: _goHome,
-                  child: const Text('Login'),
-                ),
-                const SizedBox(height: 12),
-                OutlinedButton(
-                  onPressed: _goHome,
-                  child: const Text('Continue as guest'),
-                ),
+
                 const SizedBox(height: 24),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  children: [
-                    const Text(
-                      "Don't have an account?",
-                      style: TextStyle(color: AppColors.textSecondary),
-                    ),
-                    TextButton(
-                      onPressed: () => _showComingSoon('Sign up'),
-                      child: const Text('Sign up'),
-                    ),
-                  ],
+
+                ElevatedButton(
+                  onPressed: login,
+                  child: const Text('Login'),
                 ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-}
-
-class _WelcomeCard extends StatelessWidget {
-  const _WelcomeCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        Text(
-          'Welcome back',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.w800),
-        ),
-        SizedBox(height: 6),
-        Text(
-          'Sign in to follow live scores, fixtures and more.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 15),
-        ),
-      ],
     );
   }
 }

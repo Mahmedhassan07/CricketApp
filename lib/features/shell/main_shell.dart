@@ -4,9 +4,8 @@ import '../../core/theme/app_colors.dart';
 import '../home/home_screen.dart';
 import '../matches/matches_screen.dart';
 import '../profile/profile_screen.dart';
-import '../team/team_screen.dart';
 
-/// Hosts the four bottom-nav tabs and keeps each tab's state alive.
+/// Hosts the three bottom-nav tabs and keeps each tab's state alive.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
@@ -27,7 +26,6 @@ class _MainShellState extends State<MainShell> {
         children: [
           HomeScreen(onViewAll: () => _selectTab(1)),
           const MatchesScreen(),
-          const TeamScreen(),
           const ProfileScreen(),
         ],
       ),
@@ -45,7 +43,6 @@ class _BottomNav extends StatelessWidget {
   static const _items = [
     (Icons.home_outlined, Icons.home_rounded, 'Home'),
     (Icons.calendar_month_outlined, Icons.calendar_month, 'Matches'),
-    (Icons.groups_outlined, Icons.groups, 'Team'),
     (Icons.person_outline, Icons.person, 'Profile'),
   ];
 

@@ -1,6 +1,6 @@
 /// Small date/number helpers (avoids pulling in the intl package).
 class Formatters {
-  Formatters._();
+  Formatters._(); 
 
   static const _months = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',

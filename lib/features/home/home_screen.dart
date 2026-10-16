@@ -8,7 +8,8 @@ import 'widgets/home_header.dart';
 import 'widgets/match_card.dart';
 import 'widgets/promo_banner.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatefulWidget 
+{
   const HomeScreen({super.key, required this.onViewAll});
 
   /// Switches the bottom nav to the Matches tab.

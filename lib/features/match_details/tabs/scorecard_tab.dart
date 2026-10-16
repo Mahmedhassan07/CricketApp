@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/placeholder_view.dart';
 import '../../../data/models/innings.dart';
 import '../../../data/models/match.dart';
@@ -127,46 +126,6 @@ class _InningsSection extends StatelessWidget {
           for (final b in innings.batting) StatRows.batter(b, live: isLive),
         ],
       ),
-      const Divider(),
-      _SummaryRow(
-        label: 'Extras',
-        value: '${innings.extras.total}',
-        detail: innings.extras.breakdown,
-      ),
-      const Divider(),
-      _SummaryRow(
-        label: 'Total',
-        value: '${innings.runs}-${innings.wickets} (${innings.oversText})',
-        detail: 'CRR ${Formatters.decimal(innings.runRate)}',
-        bold: true,
-      ),
-      if (innings.yetToBat.isNotEmpty) ...[
-        const Divider(),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                isLive ? 'Yet to bat' : 'Did not bat',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                innings.yetToBat.join(', '),
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 13,
-                  height: 1.4,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
       StatTable.bowling(
         rows: [for (final b in innings.bowling) StatRows.bowler(b)],
       ),
@@ -174,49 +133,3 @@ class _InningsSection extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({
-    required this.label,
-    required this.value,
-    required this.detail,
-    this.bold = false,
-  });
-
-  final String label;
-  final String value;
-  final String detail;
-  final bool bold;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 60,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: bold ? FontWeight.w800 : FontWeight.w700,
-              fontSize: 14,
-            ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              detail,
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
