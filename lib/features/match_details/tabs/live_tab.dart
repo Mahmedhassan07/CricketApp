@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
-import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/placeholder_view.dart';
 import '../../../data/models/innings.dart';
 import '../../../data/models/match.dart';
@@ -65,7 +64,7 @@ class LiveTab extends StatelessWidget {
   }
 }
 
-/// Team + big score on the left, CRR / RRR / TAR on the right.
+/// Team name above the big score.
 class _ScoreSummary extends StatelessWidget {
   const _ScoreSummary({required this.match, required this.innings});
 
@@ -74,11 +73,6 @@ class _ScoreSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isChaseInnings =
-        match.innings.length >= 2 && identical(innings, match.innings[1]);
-    final rrr = match.isChasing ? match.requiredRunRate : null;
-    final target = isChaseInnings ? match.target : null;
-
     return DetailsCard(
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -116,43 +110,6 @@ class _ScoreSummary extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          _RateColumn(label: 'CRR', value: Formatters.decimal(innings.runRate)),
-          _RateColumn(
-            label: 'RRR',
-            value: rrr == null ? '-' : Formatters.decimal(rrr),
-          ),
-          _RateColumn(label: 'TAR', value: target?.toString() ?? '-'),
-        ],
-      ),
-    );
-  }
-}
-
-class _RateColumn extends StatelessWidget {
-  const _RateColumn({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 54,
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: AppColors.textSecondary,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
           ),
         ],
       ),
