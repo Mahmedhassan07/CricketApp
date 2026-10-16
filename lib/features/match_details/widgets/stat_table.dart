@@ -47,7 +47,6 @@ class StatTable extends StatelessWidget {
     StatColumn('B'),
     StatColumn('4s', width: 30),
     StatColumn('6s', width: 30),
-    StatColumn('SR', width: 50),
   ];
 
   static const _bowling = [
@@ -55,15 +54,14 @@ class StatTable extends StatelessWidget {
     StatColumn('M', width: 30),
     StatColumn('R'),
     StatColumn('W', width: 30),
-    StatColumn('ER', width: 44),
   ];
 
-  /// Batter | R | B | 4s | 6s | SR
+  /// Batter | R | B | 4s | 6s
   const StatTable.batting({super.key, required this.rows})
       : title = 'Batter',
         columns = _batting;
 
-  /// Bowler | O | M | R | W | ER
+  /// Bowler | O | M | R | W
   const StatTable.bowling({super.key, required this.rows})
       : title = 'Bowler',
         columns = _bowling;

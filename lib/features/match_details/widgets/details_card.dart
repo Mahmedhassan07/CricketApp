@@ -82,7 +82,6 @@ class StatRows {
         '${b.balls}',
         '${b.fours}',
         '${b.sixes}',
-        b.strikeRate.toStringAsFixed(1),
       ],
     );
   }
@@ -94,7 +93,6 @@ class StatRows {
           '${b.maidens}',
           '${b.runs}',
           '${b.wickets}',
-          b.economy.toStringAsFixed(1),
         ],
       );
 }

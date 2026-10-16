@@ -5,7 +5,6 @@ import '../../../core/utils/formatters.dart';
 import '../../../core/widgets/placeholder_view.dart';
 import '../../../data/models/innings.dart';
 import '../../../data/models/match.dart';
-import '../widgets/ball_chip.dart';
 import '../widgets/details_card.dart';
 import '../widgets/stat_table.dart';
 
@@ -46,8 +45,6 @@ class LiveTab extends StatelessWidget {
         MatchStatusMessage(match: match),
         const SizedBox(height: 12),
         _ScoreSummary(match: match, innings: innings),
-        const SizedBox(height: 12),
-        _PartnershipCard(innings: innings),
         const SizedBox(height: 12),
         DetailsCard(
           child: StatTable.batting(
@@ -159,139 +156,6 @@ class _RateColumn extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// "P'SHIP 48(29)" with a MORE toggle revealing last wicket and this over.
-class _PartnershipCard extends StatefulWidget {
-  const _PartnershipCard({required this.innings});
-
-  final Innings innings;
-
-  @override
-  State<_PartnershipCard> createState() => _PartnershipCardState();
-}
-
-class _PartnershipCardState extends State<_PartnershipCard> {
-  bool _expanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final innings = widget.innings;
-    final p = innings.partnership;
-    final dismissed = innings.batting.where((b) => !b.isNotOut).toList();
-    final lastWicket = dismissed.isEmpty ? null : dismissed.last;
-    final thisOver = innings.overs.isEmpty ? null : innings.overs.last;
-
-    return DetailsCard(
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () => setState(() => _expanded = !_expanded),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 10, 12),
-              child: Row(
-                children: [
-                  const Text(
-                    "P'SHIP ",
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    p == null ? '-' : '${p.runs}(${p.balls})',
-                    style: const TextStyle(fontWeight: FontWeight.w700),
-                  ),
-                  const Spacer(),
-                  Text(
-                    _expanded ? 'LESS' : 'MORE',
-                    style: const TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 13,
-                    ),
-                  ),
-                  Icon(
-                    _expanded ? Icons.expand_less : Icons.expand_more,
-                    color: AppColors.primary,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (_expanded) ...[
-            const Divider(),
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (lastWicket != null)
-                    _InfoLine(
-                      label: 'Last wkt',
-                      value: '${lastWicket.playerName} '
-                          '${lastWicket.runs}(${lastWicket.balls}) - '
-                          '${lastWicket.dismissal}',
-                    ),
-                  if (thisOver != null) ...[
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        const SizedBox(
-                          width: 72,
-                          child: Text(
-                            'This over',
-                            style: TextStyle(
-                              color: AppColors.textSecondary,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Wrap(
-                            spacing: 6,
-                            runSpacing: 6,
-                            children: [
-                              for (final ball in thisOver.balls)
-                                BallChip(ball: ball, size: 26),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _InfoLine extends StatelessWidget {
-  const _InfoLine({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 72,
-          child: Text(
-            label,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
-          ),
-        ),
-        Expanded(child: Text(value, style: const TextStyle(fontSize: 13))),
-      ],
     );
   }
 }
