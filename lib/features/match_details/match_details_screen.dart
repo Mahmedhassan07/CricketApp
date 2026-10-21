@@ -22,12 +22,6 @@ class MatchDetailsScreen extends StatelessWidget {
         MatchStatus.upcoming => 0,
       };
 
-  void _comingSoon(BuildContext context, String feature) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$feature is coming soon')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -44,21 +38,6 @@ class MatchDetailsScreen extends StatelessWidget {
             fontWeight: FontWeight.w700,
           ),
           title: Text(match.shortTitle),
-          actions: [
-            IconButton(
-              tooltip: 'Match alerts',
-              icon: const Icon(Icons.notifications_none_rounded),
-              onPressed: () => _comingSoon(context, 'Match alerts'),
-            ),
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert),
-              onSelected: (value) => _comingSoon(context, value),
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'Share', child: Text('Share')),
-                PopupMenuItem(value: 'Refresh', child: Text('Refresh')),
-              ],
-            ),
-          ],
           bottom: TabBar(
             isScrollable: true,
             tabAlignment: TabAlignment.start,
