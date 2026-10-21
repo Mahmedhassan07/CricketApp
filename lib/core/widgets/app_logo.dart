@@ -20,7 +20,7 @@ class AppLogo extends StatelessWidget {
       fontWeight: FontWeight.w800,
       color: AppColors.textPrimary,
     );
-    final liveStyle = titleStyle.copyWith(color: AppColors.primaryLight);
+    //final liveStyle = titleStyle.copyWith(color: AppColors.primaryLight);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
