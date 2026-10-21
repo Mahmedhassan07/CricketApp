@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 
-/// Logo image + "Cricket Live" wordmark.
+/// Logo image + "Wicketly" wordmark.
 class AppLogo extends StatelessWidget {
-  const AppLogo({super.key, this.size = 1.0, this.stacked = true});
+  const AppLogo({super.key, this.size = 1.0});
 
   /// Scale factor: 1.0 = header size.
   final double size;
 
   /// true = "Cricket" over "Live" (as in the Home header).
-  final bool stacked;
-
   @override
   Widget build(BuildContext context) {
     final titleStyle = TextStyle(
